@@ -63,7 +63,16 @@ export default {
   methods: {
     async fetchConfigs() {
       try {
-        const response = await fetch('http://localhost:8000/api/configuration/all');
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJleHAiOjE3NDM5MDcyNjIsImlzcyI6InlvdXItYXBwIn0.GTibdWns2WgBmGxeqt8GwJud8ONy6DpWTxO6cImOL6g'; // Replace this with your token (can be dynamically fetched from localStorage or manually input)
+
+        const response = await fetch('http://localhost:8000/api/configuration/all', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`  // Include token in the header
+        }
+      });
+
         if (!response.ok) throw new Error('Failed to fetch configurations!');
         const data = await response.json();
 
@@ -127,68 +136,138 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 20px;
 }
 
 .toggle-btn {
-  background-color: #007bff;
+  background-color: #6c9eff;
   color: white;
-  padding: 10px 15px;
+  padding: 12px 24px;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
 .toggle-btn:hover {
-  background-color: #0056b3;
+  background-color: #6c9eff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.toggle-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .config-table {
-  width: 80%;
-  margin-bottom: 20px;
+  width: 100%;
+  margin: 2rem 0;
   border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.config-table th, .config-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
+.config-table th,
+.config-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f0f0f0;
   text-align: left;
 }
 
 .config-table th {
-  background-color: #f4f4f4;
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.config-table tr:hover td {
+  background-color: #f8f9fa;
 }
 
 .apply-btn {
-  background-color: #007bff;
+  background-color: #67c23a;
   color: white;
-  padding: 10px 15px;
+  padding: 12px 24px;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 5px;
-  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin: 0.5rem;
 }
 
 .apply-btn:hover {
-  background-color: #0056b3;
+  background-color: #67c23a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Tooltip for full JSON data */
 .action-text {
   position: relative;
-  display: inline-block;
-  max-width: 500px; /* Limit the width of the truncated text */
+  max-width: 500px;
+  padding: 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  cursor: pointer;
 }
 
 .action-text:hover {
   white-space: normal;
-  background-color: #f4f4f4;  /* Light grey background when hovered */
-  padding: 10px;
-  border-radius: 5px;
+  overflow: visible;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: white;
+  border: 1px solid #e0e0e0;
+  transform: scale(1.02);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .config-table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .toggle-btn,
+  .apply-btn {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Ripple Effect */
+.toggle-btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+.toggle-btn:hover::after {
+  width: 200px;
+  height: 200px;
 }
 </style>
